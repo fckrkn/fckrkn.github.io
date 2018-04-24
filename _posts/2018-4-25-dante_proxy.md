@@ -8,6 +8,8 @@ title: Поднимаем SOCKS5 прокси в шесть шагов
 <h1>Если вы планируете поднять свой сервер прокси на своем VDS/VPS, то сделать это не сильно большая проблема.</h1>
 <br />В примере буду использовались Debian 9 и Dante.
 <br />
+
+
 <h2>1. Логинимся на наш сервер под пользователем root</h2>
 <br />root@server# apt-get update
 <br />root@server# apt-get install dante-server
