@@ -1,0 +1,48 @@
+layout: post
+title: Поднимаем SOCKS5 прокси в шесть шагов
+---
+
+---
+Если вы планируете поднять свой сервер прокси на своем VDS/VPS, то сделать это не сильно большая проблема.
+В примере буду использовались Debian 9 и Dante.
+
+1. Логинимся на наш сервер под пользователем root
+root@server# apt-get update
+root@server# apt-get install dante-server
+
+2. Делаем резервную копию файла настройки Dante и создаем свой
+mv /etc/dante.conf /etc/dante.conf.bak
+nano /etc/dante.conf
+
+3. Указываем следующие настройки в файле конфигурации (вместо xxx.xxx.xxx.xxx указываем IP нашего сервера)
+logoutput: stderr
+internal: xxx.xxx.xxx.xxx port = 1080
+external: xxx.xxx.xxx.xxx
+
+socksmethod: username
+user.privileged: root
+user.unprivileged: nobody
+user.libwrap: nobody
+
+client pass {
+    from: 0/0 to: 0/0
+    log: error
+}
+
+socks pass {
+    from: 0/0 to: 0/0
+    log: error
+}
+
+4. Перезапускаем Dante
+sytemctl restart dante
+
+5. Добавляем пользователя и задаем пароль
+root@server# useradd —shell /usr/sbin/nologin USERNAME
+root@server# passwd USERNAME
+
+6. Проверяем наш прокси с локальной машины
+user@local-pc$ curl -x socks5://USERNAME:PASSWORD@xxx.xxx.xxx.xxx:1080 https://api.ipify.org/
+
+
+<a href="https://www.inet.no/dante/>Ссылка на сайт Dante</a>
